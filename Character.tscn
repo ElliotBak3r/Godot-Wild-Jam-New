@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
 [ext_resource path="res://Character.gd" type="Script" id=2]
+[ext_resource path="res://Input Provider.gd" type="Script" id=3]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -40,6 +41,7 @@ states/Idle/position = Vector2( 279, 100.5 )
 [sub_resource type="AnimationNodeStateMachinePlayback" id=6]
 
 [node name="Character" type="KinematicBody2D"]
+position = Vector2( 1, 2 )
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
@@ -56,3 +58,6 @@ tree_root = SubResource( 5 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/playback = SubResource( 6 )
+
+[node name="InputProvider" type="Node" parent="."]
+script = ExtResource( 3 )

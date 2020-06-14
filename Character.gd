@@ -1,35 +1,30 @@
 extends KinematicBody2D
 
-var vel = Vector2(0,0)
-var topspeed = 250
 
+export(int) var top_speed = 250
+export(int) var steps_to_reach_topspeed = 3
+export(float) var drag_force = 0.25
+
+const MAGIC_NUMBER = 60
+#variables 
+var acceleration = Vector2.ZERO
+var velocity = Vector2.ZERO
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	$InputProvider.connect('input_direction',self, "_on_input_direction")
 	pass # Replace with function body.
 
+func _on_input_direction(input_direction:Vector2):
+	acceleration += input_direction
+
+func _calculate_drag() -> Vector2:
+	return velocity * drag_force 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	# Movement (Inputs for movements) -----------------------------------------
-	if Input.is_action_pressed("ui_left"):
-		vel.x -= topspeed/3 * 60 * delta
-		# The 3 dividing the topspeed is the frames required to hit topspeed
-	if Input.is_action_pressed("ui_right"):
-		vel.x += topspeed/3 * 60 * delta
-	if Input.is_action_pressed("ui_up"):
-		vel.y -= topspeed/3 * 60 * delta
-	if Input.is_action_pressed("ui_down"):
-		vel.y += topspeed/3 * 60 * delta
-
-	# Speed limit and stopping
-	if vel.length_squared() > topspeed*topspeed:
-		vel = vel.normalized() * topspeed
-	if !Input.is_action_pressed("ui_left"):
-		if !Input.is_action_pressed("ui_right"):
-			vel.x /= 2
-	if !Input.is_action_pressed("ui_up"):
-		if !Input.is_action_pressed("ui_down"):
-			vel.y /= 2
-
-	#Post (after calculating everything) -----------------------------------------
-	move_and_slide(vel)
+	var drag = _calculate_drag()
+	velocity += (acceleration * top_speed / steps_to_reach_topspeed * MAGIC_NUMBER)
+	velocity -= drag
+	velocity = velocity.clamped(top_speed)
+	velocity = move_and_slide(velocity)
+	acceleration = Vector2.ZERO
