@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://icon.png" type="Texture" id=1]
-[ext_resource path="res://Character.gd" type="Script" id=2]
-[ext_resource path="res://Input Provider.gd" type="Script" id=3]
+[ext_resource path="res://Player/Player.gd" type="Script" id=2]
+[ext_resource path="res://Player/Input Provider.gd" type="Script" id=3]
 
 [sub_resource type="SpriteFrames" id=1]
 animations = [ {
@@ -40,15 +40,21 @@ states/Idle/position = Vector2( 279, 100.5 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=6]
 
-[node name="Character" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D"]
 position = Vector2( 1, 2 )
 script = ExtResource( 2 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 2 )
+__meta__ = {
+"_edit_group_": true
+}
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/Idle = SubResource( 3 )
