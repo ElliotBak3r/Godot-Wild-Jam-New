@@ -37,5 +37,9 @@ func _calculate_drag() -> Vector2:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	velocity += acceleration - _calculate_drag()
+	collision_layer = 1 if velocity.length() < top_speed*1.33 else 2
+	collision_mask = collision_layer
 	velocity = move_and_slide(velocity)
 	acceleration = Vector2.ZERO
+	
+	
