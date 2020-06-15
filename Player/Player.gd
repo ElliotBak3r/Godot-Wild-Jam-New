@@ -37,6 +37,10 @@ func _is_not_dashing() -> bool:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	velocity = move_and_slide(velocity - _get_drag())
+	velocity = move_and_slide(velocity - _get_drag(),Vector2.ZERO,false, 4, PI/4, false)
 	if _is_not_dashing():
 		_update_collision(COLLISION_TYPES["ALL_COLLISION"])
+	for index in get_slide_count():
+		var collision = get_slide_collision(index)
+		if collision.collider.is_class("RigidBody2D"):
+			collision.collider.apply_central_impulse(-collision.normal*5)

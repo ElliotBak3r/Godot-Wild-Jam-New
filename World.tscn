@@ -92,15 +92,17 @@ tile_data = PoolIntArray( 524289, 0, 0, 524290, 0, 0, 524291, 0, 0, 524292, 0, 0
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 328.199, 258.514 )
 
-[node name="Node" type="Node" parent="."]
+[node name="Interactables" type="Node" parent="."]
 
-[node name="RigidBody2D" type="RigidBody2D" parent="Node"]
+[node name="RigidBody2D" type="RigidBody2D" parent="Interactables"]
 position = Vector2( 603.496, 853.575 )
+mode = 2
+mass = 0.01
 gravity_scale = 0.0
-linear_damp = 5.0
+linear_damp = 50.0
 
-[node name="icon" type="Sprite" parent="Node/RigidBody2D"]
+[node name="icon" type="Sprite" parent="Interactables/RigidBody2D"]
 texture = ExtResource( 5 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Node/RigidBody2D"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactables/RigidBody2D"]
 shape = SubResource( 5 )
