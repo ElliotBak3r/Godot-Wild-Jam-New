@@ -4,19 +4,20 @@
 [ext_resource path="res://icon.png" type="Texture" id=2]
 [ext_resource path="res://Clock/background.png" type="Texture" id=3]
 
-[node name="Clock" type="Node"]
+[node name="Clock" type="Control"]
 script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="background" type="Sprite" parent="."]
-position = Vector2( 125.853, 487.557 )
 scale = Vector2( 3, 3 )
 texture = ExtResource( 3 )
 
 [node name="Hand" type="Sprite" parent="."]
-position = Vector2( 125.853, 487.557 )
 scale = Vector2( 0.1, 0.5 )
 texture = ExtResource( 2 )
-offset = Vector2( 0, -64 )
+offset = Vector2( 0, -80 )
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 120.0
