@@ -4,6 +4,8 @@ extends KinematicBody2D
 export(int) var top_speed = 250
 export(int) var steps_to_reach_topspeed = 3
 export(float) var drag_force = 0.25
+export(bool) var dash_enabled = false
+
 const DASH_FORCE = 0.25
 
 const MAGIC_NUMBER = 60
@@ -24,7 +26,8 @@ func _on_input_direction(input_direction:Vector2):
 
 
 func _on_dash():
-	acceleration += acceleration.normalized() * speed 
+	if dash_enabled:
+		acceleration += acceleration.normalized() * speed 
 
 
 func _calculate_drag() -> Vector2:

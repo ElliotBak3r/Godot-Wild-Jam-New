@@ -42,11 +42,11 @@ func _handle_input_direction(delta:float):
 
 func _handle_dash_input(event: InputEvent):
 	if event.is_action_pressed(DASH):
-		emit_signal("dash")
+		emit_signal('dash')
 
 
 func _input(event): 
-		_handle_dash_input(event)
+	_handle_dash_input(event)
 
 
 func _process(delta):

@@ -43,6 +43,7 @@ states/Idle/position = Vector2( 279, 100.5 )
 [node name="Player" type="KinematicBody2D"]
 position = Vector2( 1, 2 )
 script = ExtResource( 2 )
+dash_enabled = true
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 1 )
