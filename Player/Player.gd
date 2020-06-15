@@ -1,18 +1,12 @@
 extends KinematicBody2D
 
 
-export(int) var top_speed = 250
-export(int) var steps_to_reach_topspeed = 3
-export(float) var drag_force = 0.25
-export(bool) var dash_enabled = false
-
-const DASH_FORCE = 0.25
-
-const MAGIC_NUMBER = 60
+const TOP_SPEED = 750
+const DRAG_FORCE = 50
+const DASH_FORCE = 5000
+const COLLISION_TYPES = {"ALL_COLLISION": 1, "DASH_OVER": 2}
 #variables 
-var acceleration = Vector2.ZERO
 var velocity = Vector2.ZERO
-var speed = top_speed / steps_to_reach_topspeed * MAGIC_NUMBER
 # Called when the node enters the scene tree for the first time.
 
 func _ready():
@@ -22,24 +16,27 @@ func _ready():
 
 
 func _on_input_direction(input_direction:Vector2):
-	acceleration += input_direction * speed
+	velocity += input_direction * TOP_SPEED
 
 
-func _on_dash():
-	if dash_enabled:
-		acceleration += acceleration.normalized() * speed 
+func _on_dash(dash_direction:Vector2):
+	velocity += dash_direction * DASH_FORCE
+	_update_collision(COLLISION_TYPES["DASH_OVER"])
 
 
-func _calculate_drag() -> Vector2:
-	return velocity * drag_force 
+func _update_collision(collision: int):
+	collision_layer = collision
+	collision_mask = collision
 
+
+func _get_drag() -> Vector2:
+	return velocity / 2
+
+func _is_not_dashing() -> bool:
+	return velocity.length_squared() <= TOP_SPEED * TOP_SPEED
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
-	velocity += acceleration - _calculate_drag()
-	collision_layer = 1 if velocity.length() < top_speed*1.33 else 2
-	collision_mask = collision_layer
-	velocity = move_and_slide(velocity)
-	acceleration = Vector2.ZERO
-	
-	
+	velocity = move_and_slide(velocity - _get_drag())
+	if _is_not_dashing():
+		_update_collision(COLLISION_TYPES["ALL_COLLISION"])

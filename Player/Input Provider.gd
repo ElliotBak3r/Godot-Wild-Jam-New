@@ -2,7 +2,7 @@ extends Node
 
 
 signal input_direction(input_direction)
-signal dash
+signal dash(direction)
 
 const UP = "ui_up"
 const DOWN = "ui_down"
@@ -37,19 +37,20 @@ func _handle_input_direction(delta:float):
 	var input_direction = _get_input_direction()
 	if input_direction == Vector2.ZERO:
 		return
-	emit_signal('input_direction', input_direction.normalized() * delta)
+	emit_signal('input_direction', input_direction.normalized() )
 
 
 func _handle_dash_input(event: InputEvent):
-	if event.is_action_pressed(DASH):
-		emit_signal('dash')
+	var direction = _get_input_direction()
+	if event.is_action_pressed(DASH) and direction != Vector2.ZERO:
+		emit_signal('dash', direction)
 
 
 func _input(event): 
 	_handle_dash_input(event)
 
 
-func _process(delta):
+func _physics_process(delta):
 	_handle_input_direction(delta)
 
 
