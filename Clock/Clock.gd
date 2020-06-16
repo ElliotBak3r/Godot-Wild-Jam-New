@@ -13,7 +13,7 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	clock_hand.rotation = -timer.time_left/120 * TAU
+	clock_hand.rotation = -timer.time_left/timer.wait_time * TAU
 
 func _on_Timer_timeout():
 	get_tree().change_scene("res://World.tscn")

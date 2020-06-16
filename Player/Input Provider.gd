@@ -3,13 +3,16 @@ extends Node
 
 signal input_direction(input_direction)
 signal dash(direction)
+signal possess(direction)
 
 const UP = "ui_up"
 const DOWN = "ui_down"
 const LEFT = "ui_left"
 const RIGHT = "ui_right"
 const DASH = "ui_dash"
+const POSSESS = "ui_possess"
 
+var direction = Vector2(1,0)
 
 func _get_direction(negative: String, positive: String) -> int:
 	if(Input.is_action_pressed(positive)):
@@ -35,19 +38,23 @@ func _get_input_direction() -> Vector2:
 
 func _handle_input_direction(delta:float): 
 	var input_direction = _get_input_direction()
-	if input_direction == Vector2.ZERO:
-		return
-	emit_signal('input_direction', input_direction.normalized() )
+	if input_direction != Vector2.ZERO:
+		emit_signal('input_direction', input_direction.normalized() )
+		direction = input_direction.normalized()
 
 
 func _handle_dash_input(event: InputEvent):
-	var direction = _get_input_direction()
-	if event.is_action_pressed(DASH) and direction != Vector2.ZERO:
-		emit_signal('dash', direction)
+	var input_direction = _get_input_direction()
+	if event.is_action_pressed(DASH) and input_direction != Vector2.ZERO:
+		emit_signal('dash', input_direction)
 
+func _handle_possess_input(event: InputEvent):
+	if event.is_action_pressed(POSSESS):
+		emit_signal('possess', direction)
 
 func _input(event): 
 	_handle_dash_input(event)
+	_handle_possess_input(event)
 
 
 func _physics_process(delta):
