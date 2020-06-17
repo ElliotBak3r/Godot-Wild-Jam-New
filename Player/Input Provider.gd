@@ -3,14 +3,14 @@ extends Node
 
 signal input_direction(input_direction)
 signal dash(direction)
-signal possess(direction)
+signal pull(direction)
 
 const UP = "ui_up"
 const DOWN = "ui_down"
 const LEFT = "ui_left"
 const RIGHT = "ui_right"
 const DASH = "ui_dash"
-const POSSESS = "ui_possess"
+const PULL = "ui_pull"
 
 var direction = Vector2(1,0)
 
@@ -39,8 +39,9 @@ func _get_input_direction() -> Vector2:
 func _handle_input_direction(delta:float): 
 	var input_direction = _get_input_direction()
 	if input_direction != Vector2.ZERO:
-		emit_signal('input_direction', input_direction.normalized() )
-		direction = input_direction.normalized()
+		emit_signal('input_direction', input_direction.normalized())
+		if not Input.is_action_pressed(PULL):
+			direction = input_direction.normalized()
 
 
 func _handle_dash_input(event: InputEvent):
@@ -48,16 +49,16 @@ func _handle_dash_input(event: InputEvent):
 	if event.is_action_pressed(DASH) and input_direction != Vector2.ZERO:
 		emit_signal('dash', input_direction)
 
-func _handle_possess_input(event: InputEvent):
-	if event.is_action_pressed(POSSESS):
-		emit_signal('possess', direction)
+func _handle_pull_input():
+	if Input.is_action_pressed(PULL):
+		emit_signal('pull', direction)
 
 func _input(event): 
 	_handle_dash_input(event)
-	_handle_possess_input(event)
 
 
 func _physics_process(delta):
+	_handle_pull_input()
 	_handle_input_direction(delta)
 
 

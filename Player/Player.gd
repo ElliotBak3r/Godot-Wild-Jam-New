@@ -4,11 +4,12 @@ extends KinematicBody2D
 const TOP_SPEED = 750
 const DRAG_FORCE = 50
 const DASH_FORCE = 10000
-const SPIRIT_SPEED = 20
+const STRENGTH = 1000
 const COLLISION_TYPES = {"ALL_COLLISION": 1, "DASH_OVER": 2}
-const SPIRIT = preload("res://Spirit.tscn")
+
 #references
 onready var root = get_node("/root")
+onready var pulling = get_node("Area2D")
 #variables 
 var velocity = Vector2.ZERO
 
@@ -17,7 +18,7 @@ func _ready():
 	var input_provider = $InputProvider
 	input_provider.connect('input_direction',self, "_on_input_direction")
 	input_provider.connect('dash',self,'_on_dash')
-	input_provider.connect('possess',self,'_on_possess')
+	input_provider.connect('pull',self,'_on_pull')
 
 
 func _on_input_direction(input_direction:Vector2):
@@ -28,11 +29,12 @@ func _on_dash(dash_direction:Vector2):
 	velocity += dash_direction * DASH_FORCE
 	_update_collision(COLLISION_TYPES["DASH_OVER"])
 
-func _on_possess(spirit_direction:Vector2):
-	var spirit = SPIRIT.instance()
-	spirit.velocity = spirit_direction*SPIRIT_SPEED
-	spirit.position = position
-	root.add_child(spirit)
+func _on_pull(pull_direction:Vector2):
+	pulling.rotation = pull_direction.angle()
+	for bodies in pulling.get_overlapping_bodies():
+		if bodies.is_class("RigidBody2D"):
+			var towards = (position - bodies.position).normalized()
+			bodies.apply_central_impulse(towards * STRENGTH)
 
 
 func _update_collision(collision: int):
@@ -55,4 +57,4 @@ func _physics_process(delta):
 		for index in get_slide_count():
 			var collision = get_slide_collision(index)
 			if collision.collider.is_class("RigidBody2D"):
-				collision.collider.apply_central_impulse(-collision.normal*1000)
+				collision.collider.apply_central_impulse(-collision.normal*STRENGTH)
